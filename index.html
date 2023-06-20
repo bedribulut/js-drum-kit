@@ -60,21 +60,22 @@
 <script>
   // KeyboardEvent.keyCode is deprecated. Use KeyboardEvent.code instead.
 
-  window.addEventListener('keydown', e => {
+  function playSound(e) {
+    const audio = document.querySelector(`audio[data-key="${e.key}"]`);
     const key = document.querySelector(`div[data-key="${e.key}"]`);
-    if (!key) return;
-
+    if (!audio) return;
+    audio.currentTime = 0;
+    audio.play();
     key.classList.add('playing');
 
+    // remove transition when the transition end
     key.addEventListener('transitionend', e => {
-      if (e.propertyName === "transform") key.classList.remove('playing');
+      if (e.propertyName !== "transform") return;
+      key.classList.remove('playing');
     })
+  }
 
-    const audio = document.querySelector(`audio[data-key="${e.key}"]`);
-
-    audio.play();
-    audio.currentTime = 0;
-  })
+  window.addEventListener('keydown', playSound);
 
 </script>
 
